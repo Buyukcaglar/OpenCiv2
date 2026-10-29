@@ -803,6 +803,7 @@ int plat_normal_desktop = 1;
 int plat_lock_panels;
 int plat_fix_bugs;
 int plat_extras;
+int plat_scale = 1;
 static uint64_t real_start;
 
 /* CIV2_REALTIME: a replay script on the real clock (its waits are real

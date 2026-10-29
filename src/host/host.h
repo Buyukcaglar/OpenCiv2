@@ -41,15 +41,29 @@ int HOST_API(host_base_path)(char *buf, int size);
  * 0xAARRGGBB pixels, rows stride bytes apart.  scale 0: a window without
  * a frame over the display's usable area (the desktop drawn to fill it). */
 int HOST_API(host_open_window)(int w, int h, int scale);
+/* Whole pixels per desktop pixel for a w x h pixel display (the platform
+ * layer's too, src/platform/main.c): scale, or (0) as many as leave a
+ * 1024x768 desktop; never a desktop smaller than 640x480. */
+static inline int host_desktop_scale(int w, int h, int scale)
+{
+    int most = w / 640 < h / 480 ? w / 640 : h / 480;
+    if (scale < 1)
+        scale = w / 1024 < h / 768 ? w / 1024 : h / 768;
+    if (scale > most)
+        scale = most;
+    return scale < 1 ? 1 : scale;
+}
 /* The size of the main display (in the units windows are sized in). */
 int HOST_API(host_display_size)(int32_t *w, int32_t *h);
 /* ... and of its usable area: without the taskbar, dock or menu bar. */
 int HOST_API(host_usable_size)(int32_t *w, int32_t *h);
 /* A window of the system's own kind, where there is one (Windows, macOS):
  * mode 0 as is usual there (Windows: maximized; macOS: the screen below
- * the menu bar), 1 full screen, 2 a window.  The desktop is its size (*w x *h); its menu
- * bar is the system's (host_menu_*).  0: none (then host_open_window). */
-int HOST_API(host_open_native_window)(int32_t *w, int32_t *h, int mode);
+ * the menu bar), 1 full screen, 2 a window.  The desktop is its size in
+ * pixels over scale (*w x *h), scale whole pixels per desktop pixel (0: by
+ * the display's size: host_desktop_scale); its menu bar is the system's
+ * (host_menu_*).  Returns the scale, 0: none (then host_open_window). */
+int HOST_API(host_open_native_window)(int32_t *w, int32_t *h, int mode, int scale);
 
 /* The native window's menu bar, described whole: begin, the items in
  * order (level 0: the bar's menus; a popup's items follow it one level

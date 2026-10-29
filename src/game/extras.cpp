@@ -212,7 +212,7 @@ static const struct { const char *key, *english; } texts[] = {
     {"options.interface", "Interface additions"},
     {"options.rules", "Rule changes"},
     {"options.limits", "Limits"},
-    {"options.other", "Colours and messages"},
+    {"options.other", "Display and messages"},
     {"options.network", "Rule changes and limits are off in network games."},
     {"options.rules_note", "For the human players' units only."},
     {"options.other_note", "Messages shown on the map: GAME.TXT sections, separated by commas."},
@@ -250,6 +250,7 @@ static const struct { const char *key, *english; } texts[] = {
     {"option.PopulationLimit", "Population (10,000s)"},
     {"option.GoldLimit", "Gold"},
     {"option.MapTilesLimit", "Custom map squares"},
+    {"option.Scale", "Screen scale (from restart)"},
     {"option.Gamma", "Gamma (%, 100: none)"},
     {"option.Brightness", "Brightness (-100 to 100)"},
     {"option.Contrast", "Contrast (-100 to 100)"},
@@ -2004,22 +2005,25 @@ static void options_limits(void)
 
 static void options_other(void)
 {
-    static const char *const keys[4] = {"Gamma", "Brightness", "Contrast", "SuppressList"};
-    char shown[4][256];
-    int value[4], changed_field[4], i;
-    snprintf(shown[0], 256, "%d", extras_setting("Gamma", 100));
-    snprintf(shown[1], 256, "%d", extras_setting("Brightness", 0));
-    snprintf(shown[2], 256, "%d", extras_setting("Contrast", 0));
-    suppress_list_get(shown[3], 256);
-    if (!options_fields(extras_text("options.other"), extras_text("options.other_note"), keys, 4, shown, 1,
+    static const char *const keys[5] = {"Scale", "Gamma", "Brightness", "Contrast", "SuppressList"};
+    char shown[5][256];
+    int value[5], changed_field[5], i;
+    /* Scale: the pixels per desktop pixel in force (src/platform/main.c);
+       read at start, 0 by the display's size */
+    snprintf(shown[0], 256, "%d", plat_scale);
+    snprintf(shown[1], 256, "%d", extras_setting("Gamma", 100));
+    snprintf(shown[2], 256, "%d", extras_setting("Brightness", 0));
+    snprintf(shown[3], 256, "%d", extras_setting("Contrast", 0));
+    suppress_list_get(shown[4], 256);
+    if (!options_fields(extras_text("options.other"), extras_text("options.other_note"), keys, 5, shown, 1,
                         value, changed_field))
         return;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 4; i++)
         if (changed_field[i])
-            setting_write(keys[i], value[i]);
-    if (changed_field[3]) {
-        WritePrivateProfileStringA("OpenCiv2", "SuppressList", shown[3], "CIV.INI");
-        snprintf(suppress_changed, sizeof suppress_changed, "%s", shown[3]);
+            setting_write(keys[i], i == 0 && (value[i] < 0 || value[i] > 8) ? 0 : value[i]);
+    if (changed_field[4]) {
+        WritePrivateProfileStringA("OpenCiv2", "SuppressList", shown[4], "CIV.INI");
+        snprintf(suppress_changed, sizeof suppress_changed, "%s", shown[4]);
         suppress_was_changed = 1;
     }
 }

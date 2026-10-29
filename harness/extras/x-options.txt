@@ -58,7 +58,8 @@ key Down
 key Return
 wait 3000
 shot xo-g-other
-type 150
+key Tab                     # past the screen scale
+type 150                    # gamma
 key Return
 wait 3000
 key Escape

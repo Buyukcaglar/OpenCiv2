@@ -23,6 +23,9 @@ int host_init(int headless)
     /* macOS: full screen in a Space of its own, the menu bar shown at the
        top edge (read when the video subsystem starts). */
     SDL_SetHint(SDL_HINT_VIDEO_MAC_FULLSCREEN_SPACES, "1");
+    /* Windows: the display's own pixels, scaled by the game in whole steps
+       (host_desktop_scale), not stretched blurred by the system. */
+    SDL_SetHint(SDL_HINT_WINDOWS_DPI_AWARENESS, "permonitorv2");
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         fprintf(stderr, "civ2: SDL: %s\n", SDL_GetError());
         return 0;
@@ -46,14 +49,28 @@ int host_base_path(char *buf, int size)
     return (int)strlen(buf);
 }
 
-static int make_renderer(int w, int h)
+static int create_renderer(void)
 {
     renderer = SDL_CreateRenderer(window, -1, 0);
     if (!renderer)
         renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
-    if (!renderer)
-        return 0;
+    return renderer != NULL;
+}
+
+/* Whole pixels per desktop pixel (sharp; any pixels left over a border),
+   unless the window is smaller than the desktop: then shrunk to fit. */
+static void fit_desktop(void)
+{
+    int w = 0, h = 0;
+    if (renderer && !SDL_GetRendererOutputSize(renderer, &w, &h))
+        SDL_RenderSetIntegerScale(renderer, w >= screen_w && h >= screen_h ? SDL_TRUE : SDL_FALSE);
+}
+
+/* The w x h desktop shown in the window (fit_desktop). */
+static int make_texture(int w, int h)
+{
     SDL_RenderSetLogicalSize(renderer, w, h);
+    fit_desktop();
     texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
     return texture != NULL;
 }
@@ -71,13 +88,13 @@ int host_open_window(int w, int h, int scale)
                                   w * (scale < 1 ? 1 : scale), h * (scale < 1 ? 1 : scale),
                                   SDL_WINDOW_RESIZABLE | (getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN") ?
                                                           SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
-    return window && make_renderer(w, h);
+    return window && create_renderer() && make_texture(w, h);
 }
 
 #if defined(_WIN32) || defined(__APPLE__)
-int host_open_native_window(int32_t *w, int32_t *h, int mode)
+int host_open_native_window(int32_t *w, int32_t *h, int mode, int scale)
 {
-    Uint32 flags = SDL_WINDOW_RESIZABLE;
+    Uint32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;     /* macOS: the Retina pixels */
     SDL_Rect full;
     int i, cw = 0, ch = 0, lw = -1, lh = -1, same = 0;
 #ifdef __APPLE__
@@ -86,7 +103,7 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode)
        the green button does: the menu bar shows only at the top edge). */
     SDL_Rect r;
     if (mode == 0 && SDL_GetDisplayUsableBounds(0, &r) == 0)
-        window = SDL_CreateWindow("Civilization II", r.x, r.y, r.w, r.h, SDL_WINDOW_BORDERLESS);
+        window = SDL_CreateWindow("Civilization II", r.x, r.y, r.w, r.h, SDL_WINDOW_BORDERLESS | SDL_WINDOW_ALLOW_HIGHDPI);
     else
         window = SDL_CreateWindow("Civilization II", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1024, 768,
                                   flags | (mode == 1 ? 0 : SDL_WINDOW_MAXIMIZED));
@@ -134,18 +151,22 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode)
         lh = ch;
         SDL_Delay(10);
     }
-    if (cw < 640 || ch < 480) {
+    if (!create_renderer())
+        return 0;
+    /* in pixels (macOS: the window's size is in points) */
+    if (SDL_GetRendererOutputSize(renderer, &cw, &ch) || cw < 640 || ch < 480) {
         cw = 1024;
         ch = 768;
     }
-    *w = screen_w = cw;
-    *h = screen_h = ch;
-    return make_renderer(cw, ch);
+    scale = host_desktop_scale(cw, ch, scale);
+    *w = screen_w = cw / scale;
+    *h = screen_h = ch / scale;
+    return make_texture(screen_w, screen_h) ? scale : 0;
 }
 #else
-int host_open_native_window(int32_t *w, int32_t *h, int mode)
+int host_open_native_window(int32_t *w, int32_t *h, int mode, int scale)
 {
-    (void)w; (void)h; (void)mode;
+    (void)w; (void)h; (void)mode; (void)scale;
     return 0;
 }
 #endif
@@ -335,6 +356,8 @@ static int convert(const SDL_Event *s, HostEvent *e)
         e->button = s->wheel.direction == SDL_MOUSEWHEEL_FLIPPED ? -s->wheel.y : s->wheel.y;
         return 1;
     case SDL_WINDOWEVENT:
+        if (s->window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+            fit_desktop();
         if (s->window.event != SDL_WINDOWEVENT_EXPOSED)
             return 0;
         e->type = HOST_EV_EXPOSED;

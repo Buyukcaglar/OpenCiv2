@@ -187,20 +187,24 @@ int main(int argc, char **argv)
          * caption drawn as the original's): a desktop of the display's
          * usable area (full screen: of the whole display), in steps of whole
          * pixels per desktop pixel; CIV2_WINDOW or CIV2_SCALE: the 1024x768
-         * desktop in a window. */
+         * desktop in a window.  The steps: CIV.INI's [OpenCiv2] Scale=, or
+         * (0) by the display's size (host_desktop_scale). */
         int fullscreen = getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN");
         int windowed = (getenv("CIV2_WINDOW") && *getenv("CIV2_WINDOW")) || scale;
+        int want = (int)GetPrivateProfileIntA("OpenCiv2", "Scale", 0, "CIV.INI"), k;
         int32_t dw, dh;
         plat_lock_panels = !classic;
-        if (!classic && !scale && host_open_native_window(&dw, &dh, fullscreen ? 1 : windowed ? 2 : 0)) {
+        if (!classic && !scale && (k = host_open_native_window(&dw, &dh, fullscreen ? 1 : windowed ? 2 : 0, want))) {
             screen_w = dw;
             screen_h = dh;
+            plat_scale = k;
             window_open = plat_native_menu = 1;
         } else if ((fullscreen ? host_display_size(&dw, &dh) : !windowed && host_usable_size(&dw, &dh)) &&
                    dw >= 800 && dh >= 600) {
-            int k = dh / 768 > 1 ? dh / 768 : 1;
+            k = host_desktop_scale(dw, dh, want);
             screen_w = dw / k;
             screen_h = dh / k;
+            plat_scale = k;
             cover = !fullscreen;
         }
     }
@@ -222,8 +226,11 @@ int main(int argc, char **argv)
     wnd_init();
     resources_init();
     sound_init();
-    if (!window_open && !unit_test && (!plat_replay || getenv("CIV2_SHOW")))
+    if (!window_open && !unit_test && (!plat_replay || getenv("CIV2_SHOW"))) {
         window_open = host_open_window(screen_w, screen_h, cover ? 0 : scale ? atoi(scale) : 1);
+        if (scale && atoi(scale) > 1)
+            plat_scale = atoi(scale);
+    }
     replay_init();
     extras_load();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */
