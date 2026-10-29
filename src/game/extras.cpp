@@ -33,7 +33,7 @@ static const KeyItem extra_keys[] = {
     {X_CITY_STATUS, "CityStatus"}, {X_MASS_SPECIALISTS, "MassSpecialists"},
     {X_SUPPRESS_POPUPS, "SuppressPopups"}, {X_COLOR, "ColorCorrection"},
     {X_FOREIGN_GOLD, "ForeignGold"}, {X_ARRANGE, "ArrangeWindowsSL"}, {X_PATH_LINES, "PathLines"},
-    {X_SENTRY_GREY, "SentryHalftone"}, {X_ZOOM_1, "DefaultZoom1"},
+    {X_SENTRY_GREY, "SentryHalftone"}, {X_ZOOM_1, "DefaultZoom1"}, {X_INTEGER_ZOOM, "IntegerZoom"},
 };
 
 /* The rule changes (extra_rule): off unless their key is set (=1; the
@@ -240,6 +240,7 @@ static const struct { const char *key, *english; } texts[] = {
     {"option.PathLines", "Path lines with Shift"},
     {"option.SentryHalftone", "Sentries in grey shades"},
     {"option.DefaultZoom1", "New games at zoom 1:1"},
+    {"option.IntegerZoom", "Map zooms in whole steps"},
     {"option.WorkerHandover", "Workers hand over their work"},
     {"option.GotoNoZocStop", "Go To past foreign units"},
     {"option.UnitRotation", "Units of a stack in turn"},
@@ -251,6 +252,9 @@ static const struct { const char *key, *english; } texts[] = {
     {"option.GoldLimit", "Gold"},
     {"option.MapTilesLimit", "Custom map squares"},
     {"option.Scale", "Screen scale (from restart)"},
+    {"option.SmoothScale", "Smooth that scale (1 or 0)"},
+    {"option.SystemFonts", "System's fonts (1 or 0, from restart)"},
+    {"option.SharpText", "Text drawn sharp (1 or 0, from restart)"},
     {"option.Gamma", "Gamma (%, 100: none)"},
     {"option.Brightness", "Brightness (-100 to 100)"},
     {"option.Contrast", "Contrast (-100 to 100)"},
@@ -632,6 +636,39 @@ static int city_specialists(int citizen, int dir, int all)
             city_set_specialist_type(city, i, type);
     ((CityWindow *)((i8 *)&city_wnd.window))->recalc_redraw(1);
     return 1;
+}
+
+/* ---- X60: the map's zoom in whole steps ---- */
+
+/* The zooms at which the map's tiles are drawn with all their pixels the
+   same size: 1/4, 1/2, 1:1 and 2x (tiles 16, 32, 64 and 128 wide).  At the
+   others ((8 + zoom) / 8) the sprites have some rows and columns doubled
+   or dropped and the rest not. */
+static const int whole_zooms[] = {-6, -4, 0, 8};
+
+int extras_integer_zoom(int zoom, int tile_width)
+{
+    int n = (int)(sizeof whole_zooms / sizeof whole_zooms[0]), was = tile_width / 8 - 8, i, best;
+    for (i = 0; i < n; i++)
+        if (zoom == whole_zooms[i])
+            return zoom;
+    if (zoom == was + 1) {
+        /* one step in (Zoom In, Z, Ctrl+wheel): the next whole one that way */
+        for (i = 0; i < n - 1 && whole_zooms[i] < zoom; i++)
+            ;
+        return whole_zooms[i];
+    }
+    if (zoom == was - 1) {
+        for (i = n - 1; i > 0 && whole_zooms[i] > zoom; i--)
+            ;
+        return whole_zooms[i];
+    }
+    /* any other (the View menu's zooms, a saved game's): the nearest */
+    best = 0;
+    for (i = 1; i < n; i++)
+        if (abs(whole_zooms[i] - zoom) < abs(whole_zooms[best] - zoom))
+            best = i;
+    return whole_zooms[best];
 }
 
 static void map_zoom_to(int zoom)
@@ -2005,25 +2042,34 @@ static void options_limits(void)
 
 static void options_other(void)
 {
-    static const char *const keys[5] = {"Scale", "Gamma", "Brightness", "Contrast", "SuppressList"};
-    char shown[5][256];
-    int value[5], changed_field[5], i;
+    static const char *const keys[8] = {"Scale", "SmoothScale", "SystemFonts", "SharpText", "Gamma", "Brightness",
+                                        "Contrast", "SuppressList"};
+    char shown[8][256];
+    int value[8], changed_field[8], i;
     /* Scale: the pixels per desktop pixel in force (src/platform/main.c);
-       read at start, 0 by the display's size */
+       read at start, 0 by the system's scale.  SmoothScale: at once.
+       SystemFonts, SharpText: read at start. */
     snprintf(shown[0], 256, "%d", plat_scale);
-    snprintf(shown[1], 256, "%d", extras_setting("Gamma", 100));
-    snprintf(shown[2], 256, "%d", extras_setting("Brightness", 0));
-    snprintf(shown[3], 256, "%d", extras_setting("Contrast", 0));
-    suppress_list_get(shown[4], 256);
-    if (!options_fields(extras_text("options.other"), extras_text("options.other_note"), keys, 5, shown, 1,
+    snprintf(shown[1], 256, "%d", extras_setting("SmoothScale", 1) != 0);
+    snprintf(shown[2], 256, "%d", extras_setting("SystemFonts", 1) != 0);
+    snprintf(shown[3], 256, "%d", extras_setting("SharpText", 1) != 0);
+    snprintf(shown[4], 256, "%d", extras_setting("Gamma", 100));
+    snprintf(shown[5], 256, "%d", extras_setting("Brightness", 0));
+    snprintf(shown[6], 256, "%d", extras_setting("Contrast", 0));
+    suppress_list_get(shown[7], 256);
+    if (!options_fields(extras_text("options.other"), extras_text("options.other_note"), keys, 8, shown, 1,
                         value, changed_field))
         return;
-    for (i = 0; i < 4; i++)
+    for (i = 0; i < 7; i++)
         if (changed_field[i])
-            setting_write(keys[i], i == 0 && (value[i] < 0 || value[i] > 8) ? 0 : value[i]);
-    if (changed_field[4]) {
-        WritePrivateProfileStringA("OpenCiv2", "SuppressList", shown[4], "CIV.INI");
-        snprintf(suppress_changed, sizeof suppress_changed, "%s", shown[4]);
+            setting_write(keys[i], i == 0 && (value[i] < 0 || value[i] > 8) ? 0
+                                   : i >= 1 && i <= 3                        ? value[i] != 0
+                                                                             : value[i]);
+    if (changed_field[1])
+        plat_set_smooth(value[1] != 0);
+    if (changed_field[7]) {
+        WritePrivateProfileStringA("OpenCiv2", "SuppressList", shown[7], "CIV.INI");
+        snprintf(suppress_changed, sizeof suppress_changed, "%s", shown[7]);
         suppress_was_changed = 1;
     }
 }

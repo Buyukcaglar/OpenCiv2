@@ -55,6 +55,7 @@ enum {
     X_PATH_LINES = 39,      /* PathLines: trade roads and unit paths with Shift */
     X_SENTRY_GREY = 41,     /* SentryHalftone */
     X_ZOOM_1 = 43,          /* DefaultZoom1: new games at zoom 1:1 */
+    X_INTEGER_ZOOM = 60,    /* IntegerZoom: the map's zooms in whole steps only (OpenCiv2's own) */
     /* Rule changes (extra_rule): off unless switched on in CIV.INI */
     X_WORKER_HANDOVER = 17, /* WorkerHandover: the worker already there stops */
     X_GOTO_ZOC = 18,        /* GotoNoZocStop: Go To does not stop next to foreign units */
@@ -70,6 +71,13 @@ enum {
 
 EXTRAS_C int plat_extras;                       /* src/platform/main.c */
 EXTRAS_C int plat_scale;                        /* src/platform/main.c: pixels per desktop pixel */
+EXTRAS_C void plat_set_smooth(int on);          /* src/platform/main.c: SmoothScale, at once */
+EXTRAS_C int plat_system_fonts;                 /* src/platform/main.c: SystemFonts, text in the system's fonts */
+EXTRAS_C int plat_sharp_text;                   /* src/platform/sharptext.c: SharpText */
+/* src/platform/sharptext.c: the game copied w x h bytes of pixels from one
+   surface's bits to another's (its own copy, not GDI's): their text notes too. */
+EXTRAS_C void plat_notes_copy(const void *from_bits, const void *to_bits, int from_x, int from_y, int to_x, int to_y,
+                              int w, int h);
 EXTRAS_C uint64_t extras_enabled;     /* src/game/extras.cpp: bit per item */
 static inline int extra_ui(int item) { return plat_extras && (int)((extras_enabled >> item) & 1); }
 EXTRAS_C uint64_t extras_rules;       /* src/game/extras.cpp: bit per rule change */
@@ -89,6 +97,9 @@ EXTRAS_C int extras_text_translated(const char *key);  /* whether a translation 
 /* each of the additions' texts: add("openciv2.<key>", English) (lang.cpp's export) */
 EXTRAS_C void extras_texts_each(void (*add)(const char *key, const char *english));
 EXTRAS_C void extras_options_dialog(void);      /* Game > OpenCiv2 Options */
+/* X60: a map view's zoom made one of the whole steps, from the zoom asked
+   for and the tile width of the one it had */
+EXTRAS_C int extras_integer_zoom(int zoom, int tile_width);
 
 /* In a dialog list row's text (X30, X37): EXTRAS_ICON then 'g' (a gold coin),
    's' (a shield) or 'f' (food): that icon. */

@@ -7,6 +7,7 @@
  * blended as its DIB engine does (tools/probe/aaprobe.c checks the model).
  */
 #include "plat.h"
+#include "../host/host.h"
 
 DC *dc_get(HDC h);
 
@@ -28,6 +29,7 @@ typedef struct {
 
 struct FontFace {
     int face, height, bold, italic;
+    int system;                     /* the system's glyphs (system_face), not the recorded ones */
     int tm[11];
     Glyph g[256];
     AaGlyph *aa;                    /* 256 entries, loaded on demand */
@@ -195,9 +197,84 @@ static int face_index(const LOGFONTA *lf)
     return 1;
 }
 
+/* (port) The system's own fonts (plat_system_fonts: Windows' GDI,
+ * host_font_open): each font as the game asks for it, its glyphs as the
+ * system draws them -- the original's text on Windows -- instead of the
+ * glyphs recorded from Wine.  NULL where the host has none. */
+#define MAX_SYSTEM_FACES 256
+static struct {
+    char name[LF_FACESIZE];
+    int height, weight, italic, pitch;
+    FontFace *ff;
+} system_faces[MAX_SYSTEM_FACES];
+static int n_system_faces, system_fonts_missing;
+
+static FontFace *system_face(const LOGFONTA *lf)
+{
+    int i, c, font, need, weight = lf->lfWeight ? (int)lf->lfWeight : 400;
+    int32_t tm[11], m[5];
+    FontFace *ff;
+    for (i = 0; i < n_system_faces; i++)
+        if (system_faces[i].height == (int)lf->lfHeight && system_faces[i].weight == weight &&
+            system_faces[i].italic == (lf->lfItalic != 0) && system_faces[i].pitch == lf->lfPitchAndFamily &&
+            !strcasecmp(system_faces[i].name, lf->lfFaceName))
+            return system_faces[i].ff;
+    if (system_fonts_missing || n_system_faces >= MAX_SYSTEM_FACES)
+        return NULL;
+    font = host_font_open(lf->lfFaceName, (int)lf->lfHeight, weight, lf->lfItalic != 0, lf->lfPitchAndFamily, tm);
+    if (!font) {
+        system_fonts_missing = n_system_faces == 0;     /* none on this host: the recorded ones from now on */
+        return NULL;
+    }
+    ff = calloc(1, sizeof *ff);
+    ff->aa = calloc(256, sizeof *ff->aa);
+    memcpy(ff->tm, tm, sizeof tm);
+    ff->face = face_index(lf);
+    ff->height = tm[0];
+    ff->bold = weight >= 600;
+    ff->italic = lf->lfItalic != 0;
+    ff->system = 1;
+    for (c = 0; c < 256; c++) {
+        Glyph *g = &ff->g[c];
+        AaGlyph *a = &ff->aa[c];
+        unsigned char *bits;
+        need = host_font_glyph(font, c, 0, m, NULL, 0);
+        if (need >= 0 && (bits = calloc((size_t)(need > 0 ? need : 1), 1)) != NULL &&
+            host_font_glyph(font, c, 0, m, bits, need) >= 0) {
+            g->adv = g->dadv = (short)m[0];
+            g->x = (signed char)m[1];
+            g->y = (signed char)m[2];
+            g->w = (unsigned char)m[3];
+            g->h = (unsigned char)m[4];
+            g->bits = bits;
+        }
+        need = host_font_glyph(font, c, 1, m, NULL, 0);
+        if (need > 0 && (a->cov = calloc((size_t)need, 1)) != NULL &&
+            host_font_glyph(font, c, 1, m, a->cov, need) >= 0) {
+            a->x = (signed char)m[1];
+            a->y = (signed char)m[2];
+            a->w = (unsigned char)m[3];
+            a->h = (unsigned char)m[4];
+        }
+    }
+    i = n_system_faces++;
+    snprintf(system_faces[i].name, sizeof system_faces[i].name, "%s", lf->lfFaceName);
+    system_faces[i].height = (int)lf->lfHeight;
+    system_faces[i].weight = weight;
+    system_faces[i].italic = lf->lfItalic != 0;
+    system_faces[i].pitch = lf->lfPitchAndFamily;
+    system_faces[i].ff = ff;
+    return ff;
+}
+
 FontFace *font_face_for(const LOGFONTA *lf)
 {
     int face, h, bold = lf->lfWeight >= 600, it = lf->lfItalic != 0;
+    if (plat_system_fonts) {
+        FontFace *sf = system_face(lf);
+        if (sf)
+            return sf;
+    }
     if (!font_data)
         load_fonts();
     face = face_index(lf);
@@ -264,6 +341,51 @@ static FontFace *dc_face(DC *dc)
     return font ? font->face : NULL;
 }
 
+/* Sharp text (sharptext.c): before a glyph is drawn at gx, gy (w x h,
+   device) its note, the pen at px, py (the cell's top left); -1 if none. */
+static int glyph_note(Bitmap *b, const Region *rg, const RECT *bounds, int font, FontFace *f, int ch, int adv,
+                      COLORREF c, int gx, int gy, int w, int h, int px, int py)
+{
+    RECT gr, r = {0, 0, 0, 0}, a, clip;
+    TextNote *n;
+    int k, i;
+    if (font < 0 || w <= 0 || h <= 0 || !sharp_surface(b))
+        return -1;
+    gr.left = gx; gr.top = gy; gr.right = gx + w; gr.bottom = gy + h;
+    for (k = 0; k < rg->n; k++)
+        if (rect_intersect(&a, &gr, &rg->r[k])) {
+            if (rect_empty(&r))
+                r = a;
+            else {
+                if (a.left < r.left) r.left = a.left;
+                if (a.top < r.top) r.top = a.top;
+                if (a.right > r.right) r.right = a.right;
+                if (a.bottom > r.bottom) r.bottom = a.bottom;
+            }
+        }
+    a.left = 0; a.top = 0; a.right = b->w; a.bottom = b->h;
+    if (!rect_intersect(&r, &r, &a))
+        return -1;
+    clip = r;
+    clip.left--; clip.top--; clip.right++; clip.bottom++;
+    if (!rect_intersect(&clip, &clip, bounds))
+        return -1;
+    if (!rect_intersect(&clip, &clip, &a))
+        return -1;
+    i = note_begin(b, &r, &clip);
+    if (i < 0)
+        return -1;
+    n = &b->notes->v[i];
+    n->kind = 0;
+    n->font = font;
+    n->ch = ch;
+    n->adv = adv;
+    n->color = (DWORD)(GetRValue(c) << 16 | GetGValue(c) << 8 | GetBValue(c));
+    n->x = px;
+    n->y = py + f->tm[1];
+    return i;
+}
+
 /* Glyphs at logical (x, y) = top left of the text cell, clipped to `clip`
  * (logical) and the DC's clip region. */
 void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
@@ -271,8 +393,9 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
     FontFace *f = dc_face(dc);
     Bitmap *b;
     Region rg = {0, 0, NULL};
+    RECT bounds;
     COLORREF c;
-    int i, ox, oy;
+    int i, ox, oy, font = -1;
     if (!f || n <= 0)
         return;
     b = dc_target(dc);
@@ -290,6 +413,12 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
         RECT dclip = *clip;
         dclip.left += ox; dclip.right += ox; dclip.top += oy; dclip.bottom += oy;
         rgn_intersect_rect(&rg, &dclip);
+    }
+    rgn_bounds(&rg, &bounds);
+    if (sharp_surface(dc_target(dc))) {
+        Font *fo = obj_get(dc->hfont, OBJ_FONT);
+        if (fo)
+            font = sharp_font_id(&fo->lf);
     }
     if (dc->bk_mode == OPAQUE) {
         RECT bg, d;
@@ -310,12 +439,14 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
     if (b->bpp > 8) {
         /* Antialiased, as Wine draws on deep surfaces. */
         unsigned tr = GetRValue(c), tg = GetGValue(c), tb = GetBValue(c);
-        if (!aa_data)
+        if (!aa_data && !f->system)
             load_aa();
         for (i = 0; i < n && f->aa; i++) {
             AaGlyph *g = &f->aa[(unsigned char)s[i]];
             const unsigned char *cov = aa_coverage(g);
             int gx = x + ox + g->x, gy = y + oy + g->y, row, col, k;
+            int note = cov ? glyph_note(b, &rg, &bounds, font, f, (unsigned char)s[i],
+                                        f->g[(unsigned char)s[i]].adv, c, gx, gy, g->w, g->h, x + ox, y + oy) : -1;
             for (k = 0; cov && k < rg.n; k++) {
                 RECT gr, a;
                 gr.left = gx; gr.top = gy; gr.right = gx + g->w; gr.bottom = gy + g->h;
@@ -336,6 +467,7 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
                                                   aa_blend(GetBValue(d), tb, v)));
                     }
             }
+            note_end(b, note);
             x += f->g[(unsigned char)s[i]].adv;     /* antialiased glyphs advance as measured */
         }
         rgn_free(&rg);
@@ -347,6 +479,8 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
         for (i = 0; i < n; i++) {
             const Glyph *g = &f->g[(unsigned char)s[i]];
             int gx = x + ox + g->x, gy = y + oy + g->y, row, col, stride = (g->w + 7) / 8, k;
+            int note = glyph_note(b, &rg, &bounds, font, f, (unsigned char)s[i], g->dadv, c, gx, gy, g->w, g->h,
+                                  x + ox, y + oy);
             for (k = 0; k < rg.n; k++) {
                 RECT gr, a;
                 gr.left = gx; gr.top = gy; gr.right = gx + g->w; gr.bottom = gy + g->h;
@@ -372,6 +506,7 @@ void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip)
                     }
                 }
             }
+            note_end(b, note);
             x += g->dadv;
         }
     }
@@ -394,7 +529,25 @@ static void underline(DC *dc, FontFace *f, int x, int y, const char *s, int from
             return;
         r = a;
     }
-    dc_fill_rect(dc, &r, dc->text_color);
+    {
+        /* sharp text: the bar too (device coordinates) */
+        Bitmap *b = dc_target(dc);
+        RECT d = r, all = {0, 0, 0, 0};
+        int note = -1;
+        d.left += dc->origin.x; d.right += dc->origin.x;
+        d.top += dc->origin.y; d.bottom += dc->origin.y;
+        all.right = b->w;
+        all.bottom = b->h;
+        if (sharp_surface(b) && rect_intersect(&d, &d, &all) && (note = note_begin(b, &d, &d)) >= 0) {
+            COLORREF c = dc_resolve_color(dc, dc->text_color);
+            TextNote *n = &b->notes->v[note];
+            n->kind = 1;
+            n->font = -1;
+            n->color = (DWORD)(GetRValue(c) << 16 | GetGValue(c) << 8 | GetBValue(c));
+        }
+        dc_fill_rect(dc, &r, dc->text_color);
+        note_end(b, note);
+    }
 }
 
 /* ---- GDI entry points ---- */

@@ -20,7 +20,7 @@ wait 3000
 shot xo-b-choose
 key Return
 wait 3000
-click 40 203                # Turn in the status panel
+click 40 192                # Turn in the status panel
 wait 1000
 shot xo-c-interface
 key Return
@@ -59,6 +59,9 @@ key Return
 wait 3000
 shot xo-g-other
 key Tab                     # past the screen scale
+key Tab                     # and its smoothing
+key Tab                     # and the system's fonts
+key Tab                     # and the sharp text
 type 150                    # gamma
 key Return
 wait 3000

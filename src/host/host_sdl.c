@@ -92,6 +92,22 @@ int host_open_window(int w, int h, int scale)
 }
 
 #if defined(_WIN32) || defined(__APPLE__)
+/* The system's own scale for the window, in whole steps (pw: its width in
+   pixels): Windows, its DPI setting (100% to 175%: 1, 200%: 2 ...); macOS,
+   pixels per point (Retina: 2).  0 if unknown. */
+static int system_scale(int pw)
+{
+#ifdef _WIN32
+    int dpi = host_win_dpi(window);
+    (void)pw;
+    return dpi > 0 ? dpi / 96 : 0;
+#else
+    int ww = 0, wh = 0;
+    SDL_GetWindowSize(window, &ww, &wh);
+    return ww > 0 ? pw / ww : 0;
+#endif
+}
+
 int host_open_native_window(int32_t *w, int32_t *h, int mode, int scale)
 {
     Uint32 flags = SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;     /* macOS: the Retina pixels */
@@ -158,7 +174,7 @@ int host_open_native_window(int32_t *w, int32_t *h, int mode, int scale)
         cw = 1024;
         ch = 768;
     }
-    scale = host_desktop_scale(cw, ch, scale);
+    scale = host_desktop_scale(cw, ch, scale, system_scale(cw));
     *w = screen_w = cw / scale;
     *h = screen_h = ch / scale;
     return make_texture(screen_w, screen_h) ? scale : 0;
@@ -230,9 +246,235 @@ int host_usable_size(int32_t *w, int32_t *h)
     return 1;
 }
 
+/* ---- smoothing: the desktop through Scale2x / Scale3x (AdvMAME) ---- */
+
+static int smooth;
+static SDL_Texture *big;            /* the desktop at big_f times */
+static Uint32 *big_px, *last_px;    /* big's pixels; the desktop last smoothed */
+static int big_f, big_w, big_h;
+
+void host_set_smooth(int on)
+{
+    smooth = on != 0;
+}
+
+#ifndef _WIN32
+/* (the system's fonts: Windows only, host_font_win.c) */
+int host_font_open(const char *face, int height, int weight, int italic, int pitch_family, int32_t *tm)
+{
+    (void)face; (void)height; (void)weight; (void)italic; (void)pitch_family; (void)tm;
+    return 0;
+}
+
+int host_font_glyph(int font, int ch, int aa, int32_t *m, uint8_t *bits, int size)
+{
+    (void)font; (void)ch; (void)aa; (void)m; (void)bits; (void)size;
+    return -1;
+}
+#endif
+
+/* The factor the desktop is smoothed by: 2 or 3 where it is shown at a
+   multiple of that (4: 2, then 2 by the renderer), 0 not smoothed. */
+static int smooth_factor(void)
+{
+    int w = 0, h = 0, k;
+    if (!smooth || !renderer || SDL_GetRendererOutputSize(renderer, &w, &h) || screen_w <= 0 || screen_h <= 0)
+        return 0;
+    k = w / screen_w < h / screen_h ? w / screen_w : h / screen_h;
+    return k >= 2 && k % 2 == 0 ? 2 : k >= 3 && k % 3 == 0 ? 3 : 0;
+}
+
+/* Row y of the desktop (src, sw pixels a row) into rows f*y.. of out
+   (big_w pixels a row; Scale2x, Scale3x: edges of one colour against
+   another rounded off, the rest as blocks). */
+static void smooth_row_to(const Uint32 *src, int sw, int y, Uint32 *out, int big_w, int big_f)
+{
+    const Uint32 *up = src + (y > 0 ? y - 1 : y) * sw, *row = src + y * sw,
+                 *down = src + (y + 1 < screen_h ? y + 1 : y) * sw;
+    Uint32 *o = out + (size_t)y * big_f * big_w;
+    int x;
+    for (x = 0; x < screen_w; x++) {
+        int l = x > 0 ? x - 1 : x, r = x + 1 < screen_w ? x + 1 : x;
+        Uint32 b = up[x], d = row[l], e = row[x], f = row[r], h = down[x];
+        Uint32 *p = o + x * big_f;
+        if (big_f == 2) {
+            if (b != h && d != f) {
+                p[0] = d == b ? d : e;
+                p[1] = b == f ? f : e;
+                p[big_w] = d == h ? d : e;
+                p[big_w + 1] = h == f ? f : e;
+            } else
+                p[0] = p[1] = p[big_w] = p[big_w + 1] = e;
+        } else {
+            Uint32 a = up[l], c = up[r], g = down[l], i = down[r];
+            if (b != h && d != f) {
+                p[0] = d == b ? d : e;
+                p[1] = (d == b && e != c) || (b == f && e != a) ? b : e;
+                p[2] = b == f ? f : e;
+                p[big_w] = (d == b && e != g) || (d == h && e != a) ? d : e;
+                p[big_w + 1] = e;
+                p[big_w + 2] = (b == f && e != i) || (h == f && e != c) ? f : e;
+                p[2 * big_w] = d == h ? d : e;
+                p[2 * big_w + 1] = (d == h && e != i) || (h == f && e != g) ? h : e;
+                p[2 * big_w + 2] = h == f ? f : e;
+            } else
+                p[0] = p[1] = p[2] = p[big_w] = p[big_w + 1] = p[big_w + 2] = p[2 * big_w] =
+                    p[2 * big_w + 1] = p[2 * big_w + 2] = e;
+        }
+    }
+}
+
+static void smooth_row(const Uint32 *src, int y)
+{
+    smooth_row_to(src, screen_w, y, big_px, big_w, big_f);
+}
+
+/* The desktop smoothed into big: only the rows next to those that changed
+   since the last time.  0 if it cannot be (then shown as blocks). */
+static int smooth_present(const void *pixels, int stride, int f)
+{
+    const Uint32 *src = (const Uint32 *)pixels;
+    SDL_Rect dirty;
+    int y, first = -1, last = -1, all = 0;
+    if (stride != screen_w * 4)
+        return 0;
+    if (!big || big_f != f) {
+        if (big)
+            SDL_DestroyTexture(big);
+        free(big_px);
+        free(last_px);
+        big_f = f;
+        big_w = screen_w * f;
+        big_h = screen_h * f;
+        big = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, big_w, big_h);
+        big_px = (Uint32 *)malloc((size_t)big_w * big_h * 4);
+        last_px = (Uint32 *)malloc((size_t)screen_w * screen_h * 4);
+        if (!big || !big_px || !last_px) {
+            if (big)
+                SDL_DestroyTexture(big);
+            free(big_px);
+            free(last_px);
+            big = NULL;
+            big_px = last_px = NULL;
+            big_f = 0;
+            return 0;
+        }
+        all = 1;
+    }
+    for (y = 0; y < screen_h; y++)
+        if (all || memcmp(src + y * screen_w, last_px + y * screen_w, (size_t)screen_w * 4)) {
+            if (first < 0)
+                first = y > 0 ? y - 1 : 0;
+            last = y + 1 < screen_h ? y + 1 : y;
+        }
+    if (first >= 0) {
+        for (y = first; y <= last; y++)
+            smooth_row(src, y);
+        memcpy(last_px + first * screen_w, src + first * screen_w, (size_t)(last - first + 1) * screen_w * 4);
+        dirty.x = 0;
+        dirty.y = first * f;
+        dirty.w = big_w;
+        dirty.h = (last - first + 1) * f;
+        SDL_UpdateTexture(big, &dirty, big_px + (size_t)dirty.y * big_w, big_w * 4);
+    }
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, big, NULL, NULL);
+    SDL_RenderPresent(renderer);
+    return 1;
+}
+
+/* ---- sharp text: drawn over the scaled desktop (Windows: host_font_win.c) ---- */
+
+#ifdef _WIN32
+uint32_t *host_win_text_buffer(int w, int h);
+void host_win_text_draw(const HostText *t, int n, int k);
+#endif
+
+/* Whole screen pixels per desktop pixel, 0 where the desktop is shrunk to
+   fit the window. */
+static int whole_scale(void)
+{
+    int w = 0, h = 0, k;
+    if (!renderer || SDL_GetRendererOutputSize(renderer, &w, &h) || screen_w <= 0 || screen_h <= 0)
+        return 0;
+    k = w / screen_w < h / screen_h ? w / screen_w : h / screen_h;
+    return k >= 1 ? k : 0;
+}
+
+int host_text_scale(void)
+{
+#ifdef _WIN32
+    return texture ? whole_scale() : 0;
+#else
+    return 0;
+#endif
+}
+
+#ifndef _WIN32
+void host_text_font(int id, const char *face, int height, int weight, int italic, int pitch_family)
+{
+    (void)id; (void)face; (void)height; (void)weight; (void)italic; (void)pitch_family;
+}
+#endif
+
+void host_present_text(const void *pixels, int stride, const HostText *texts, int n)
+{
+#ifdef _WIN32
+    static SDL_Texture *frame;
+    static int frame_w, frame_h;
+    const Uint32 *src = (const Uint32 *)pixels;
+    int k = host_text_scale(), f = smooth_factor(), w, h, x, y, i;
+    Uint32 *out;
+    if (k < 1 || stride != screen_w * 4 || !(out = host_win_text_buffer(screen_w * k, screen_h * k))) {
+        host_present(pixels, stride);
+        return;
+    }
+    w = screen_w * k;
+    h = screen_h * k;
+    if (!frame || frame_w != w || frame_h != h) {
+        if (frame)
+            SDL_DestroyTexture(frame);
+        frame = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, w, h);
+        if (!frame) {
+            host_present(pixels, stride);
+            return;
+        }
+        SDL_SetTextureBlendMode(frame, SDL_BLENDMODE_NONE);    /* (GDI leaves the alpha of what it draws 0) */
+        frame_w = w;
+        frame_h = h;
+    }
+    /* the desktop, scaled: smoothed (host_set_smooth) or as blocks */
+    for (y = 0; y < screen_h; y++)
+        if (f == k)
+            smooth_row_to(src, screen_w, y, out, w, k);
+        else {
+            Uint32 *o = out + (size_t)y * k * w;
+            const Uint32 *row = src + (size_t)y * screen_w;
+            for (x = 0; x < screen_w; x++)
+                for (i = 0; i < k; i++)
+                    o[x * k + i] = row[x];
+            for (i = 1; i < k; i++)
+                memcpy(o + (size_t)i * w, o, (size_t)w * 4);
+        }
+    host_win_text_draw(texts, n, k);
+    SDL_UpdateTexture(frame, NULL, out, w * 4);
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, frame, NULL, NULL);
+    SDL_RenderPresent(renderer);
+#else
+    (void)texts;
+    (void)n;
+    host_present(pixels, stride);
+#endif
+}
+
 void host_present(const void *pixels, int stride)
 {
+    int f;
     if (!texture)
+        return;
+    f = smooth_factor();
+    if (f && smooth_present(pixels, stride, f))
         return;
     SDL_UpdateTexture(texture, NULL, pixels, stride);
     SDL_RenderClear(renderer);

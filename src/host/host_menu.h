@@ -19,6 +19,8 @@ void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n);
 void host_win_full_screen(SDL_Window *window);
 /* Windows: the item id of a WM_COMMAND from the menu bar (an SDL_SysWMmsg), else 0. */
 int host_menu_syswm_command(const void *msg);
+/* Windows: the DPI of the monitor the window is on (96 at 100%), 0 if unknown. */
+int host_win_dpi(SDL_Window *window);
 /* macOS: an item was chosen (host_sdl.c turns it into HOST_EV_COMMAND). */
 void host_menu_picked(int id);
 /* macOS: the program made the active one (its menu bar the one shown). */

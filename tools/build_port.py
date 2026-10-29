@@ -172,7 +172,7 @@ def exe(cross_windows=False):
     # disc image's music: their sources, from tools/fetch-toolchain.sh)
     host = [os.path.join(ROOT, 'src', 'host', f) for f in
             ('port_main.c', 'wasi.c', 'host_sdl.c', 'host_net.c', 'setup.c', 'setup_disc.c') +
-            (('host_menu_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
+            (('host_menu_win.c', 'host_font_win.c', 'setup_win.c') if windows else ('setup_unix.c',)) +
             (('host_menu_mac.m', 'setup_mac.m') if mac else ())]
     third = (sorted(glob.glob(os.path.join(paths.UNSHIELD, 'lib', '*.c'))) +
              [os.path.join(paths.UNSHIELD, 'lib', 'md5', 'md5c.c')] +

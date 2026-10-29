@@ -76,7 +76,10 @@ int rect_intersect(RECT *out, const RECT *a, const RECT *b);
 
 /* ---- bitmaps (surfaces) ---- */
 
+struct TextNotes;
+
 typedef struct Bitmap {
+    struct TextNotes *notes;    /* the text drawn on it, for drawing it sharp (sharptext.c) */
     int w, h, bpp;              /* 1, 8, 16, 24 or 32 */
     int stride;                 /* bytes per row */
     int bottom_up;              /* DIB rows stored bottom row first */
@@ -250,6 +253,44 @@ void text_metrics(FontFace *f, TEXTMETRICA *tm);
 int text_width(FontFace *f, const char *s, int n);
 int text_height(FontFace *f);
 void text_draw(DC *dc, int x, int y, const char *s, int n, const RECT *clip);   /* logical coords, top left */
+
+/* ---- sharp text (sharptext.c) ----
+ * Each character the platform draws on a surface leaves a note: where its
+ * pixels are, the font, the colour, the pen, the pixels it covered and a
+ * fingerprint of the pixels it left.  Copies through blit() carry the notes
+ * along; anything else that changes those pixels (the game's own drawing
+ * included) breaks the fingerprint and the note is dropped.  At present the
+ * notes on the screen are drawn over the scaled desktop by the host, at the
+ * screen's own resolution and antialiased (host_present_text), on the
+ * pixels they covered; text without a note shows as drawn. */
+typedef struct TextNote {
+    RECT r;                     /* its pixels on the surface (device coordinates) */
+    RECT clip;                  /* where its sharp form may draw: r and a pixel around it, within the DC's clip */
+    int kind;                   /* 0 a character, 1 a bar (an underline: r) */
+    int font, ch, adv;          /* sharp_font_id's number; the character; its advance */
+    DWORD color;                /* 0x00RRGGBB */
+    int x, y;                   /* the pen: the cell's left, the baseline */
+    unsigned long long hash;    /* r's pixels as the text left them */
+    unsigned char *bg;          /* r's pixels before it, as stored (bpp / 8 bytes each) */
+} TextNote;
+typedef struct TextNotes { int n, cap; TextNote *v; } TextNotes;
+
+extern int plat_sharp_text;                     /* main.c: SharpText (with the system's fonts) */
+int sharp_surface(const Bitmap *b);             /* notes kept on b */
+int sharp_font_id(const LOGFONTA *lf);
+int note_begin(Bitmap *b, const RECT *r, const RECT *clip);  /* before drawing r: the new note's index, -1 */
+void note_end(Bitmap *b, int i);                /* after: its fingerprint */
+unsigned long long note_hash(const Bitmap *b, const RECT *r);
+int note_valid(const Bitmap *b, const TextNote *n);
+void note_free(TextNote *n);
+void notes_remove(Bitmap *b, int i);
+void notes_free(Bitmap *b);
+TextNote *notes_add(Bitmap *b);                 /* a new, empty note at the end */
+void notes_compose_begin(void);                 /* plat_compose: the screen's notes from the surfaces shown */
+void notes_compose_surface(Bitmap *s, int dx, int dy);
+void notes_compose_end(void);                   /* after the windows, before the colour correction */
+void notes_compose_lut(void);                   /* after it */
+int sharp_present(void);                        /* the screen with its notes drawn sharp: 1, else 0 */
 
 /* ---- presentation ---- */
 

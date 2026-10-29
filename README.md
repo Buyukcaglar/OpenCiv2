@@ -28,9 +28,14 @@ together, higher limits for gold, population and the map ...). Set `CIV2_CLASSIC
 the original game instead: its bugs, its interface, and its menu bar and window caption drawn as
 the original's.
 
-On a large screen the game is drawn at 2× or 3×, sharp, so a 4K screen shows it at 1920×1080.
-Change the scale in Game > OpenCiv2 Options (Display and messages); see
-[EXTRAS.md](docs/EXTRAS.md#screen-scale).
+Where the system is set to scale things up (Windows at 200%, a Mac's Retina screen), the game
+is drawn at 2× or 3× too, so a 4K screen at 200% shows it at 1920×1080; at 100% to 175% it
+keeps the screen's own pixels. Pixels drawn larger are smoothed (Scale2x/Scale3x) rather than
+shown as blocks. Change the scale and the smoothing in Game > OpenCiv2 Options (Display and
+messages); see [EXTRAS.md](docs/EXTRAS.md#screen-scale).
+
+The text is in the fonts the original used on Windows (Times New Roman, Arial, Courier and
+System), drawn by Windows; see [EXTRAS.md](docs/EXTRAS.md#fonts).
 
 ### Multiplayer
 

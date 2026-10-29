@@ -1,6 +1,7 @@
 # Path lines (X39), trade roads: a city under the cursor (View Pieces),
 # Shift held, the pointer over another city: the way their road must take.
-# test: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
+# (Without IntegerZoom, X60: at the original's Medium Zoom Out.)
+# test: CIV2_TEST_EXTRAS=-60 CIV2_TEST_FULL=640x480
 wait 8000
 key Down Down Down Down     # "Load a Game"
 wait 500

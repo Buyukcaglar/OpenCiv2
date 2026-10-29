@@ -37,7 +37,8 @@ void plat_present(void)
     last_present = now;
     if (!plat_overlay)
         plat_compose();
-    host_present(screen->bits, screen->stride);
+    if (!sharp_present())
+        host_present(screen->bits, screen->stride);
     present_cost = host_time_us() - now;
 }
 
@@ -51,6 +52,14 @@ static int confirm_quit(void)
     return host_message_box(1, "Civilization II",
                             "Quit Civilization II?\n\nThe game in progress ends here; whatever was not saved is lost.",
                             2, labels, ids, 1, 1);
+}
+
+/* The desktop's pixels smoothed where shown 2 or more to a desktop pixel
+   (host_set_smooth), at once. */
+void plat_set_smooth(int on)
+{
+    host_set_smooth(on);
+    plat_present_now();
 }
 
 /* Now, whatever the frame rate: before waiting for input (menus). */
@@ -188,7 +197,9 @@ int main(int argc, char **argv)
          * usable area (full screen: of the whole display), in steps of whole
          * pixels per desktop pixel; CIV2_WINDOW or CIV2_SCALE: the 1024x768
          * desktop in a window.  The steps: CIV.INI's [OpenCiv2] Scale=, or
-         * (0) by the display's size (host_desktop_scale). */
+         * (0) the system's scale (its own window) or the display's size
+         * (host_desktop_scale); SmoothScale=0: those pixels shown as blocks
+         * rather than smoothed (host_set_smooth). */
         int fullscreen = getenv("CIV2_FULLSCREEN") && *getenv("CIV2_FULLSCREEN");
         int windowed = (getenv("CIV2_WINDOW") && *getenv("CIV2_WINDOW")) || scale;
         int want = (int)GetPrivateProfileIntA("OpenCiv2", "Scale", 0, "CIV.INI"), k;
@@ -201,7 +212,7 @@ int main(int argc, char **argv)
             window_open = plat_native_menu = 1;
         } else if ((fullscreen ? host_display_size(&dw, &dh) : !windowed && host_usable_size(&dw, &dh)) &&
                    dw >= 800 && dh >= 600) {
-            k = host_desktop_scale(dw, dh, want);
+            k = host_desktop_scale(dw, dh, want, 0);
             screen_w = dw / k;
             screen_h = dh / k;
             plat_scale = k;
@@ -222,6 +233,17 @@ int main(int argc, char **argv)
         /* Tests: the game as on Windows and macOS (the host's menu bar, no
            caption of its own, panels locked), the host's part left out. */
         plat_native_menu = plat_lock_panels = 1;
+    /* Text in the system's own fonts (Windows': src/platform/text.c), as the
+       original's was drawn there, unless CIV.INI's [OpenCiv2]
+       SystemFonts=0; not in replays and unit tests, which are compared
+       with the original under Wine (its glyphs: data/native/fonts*.bin),
+       unless CIV2_TEST_SYSFONTS is set (tests of this). */
+    plat_system_fonts = (!plat_replay || (getenv("CIV2_TEST_SYSFONTS") && *getenv("CIV2_TEST_SYSFONTS"))) &&
+        !unit_test &&
+        GetPrivateProfileIntA("OpenCiv2", "SystemFonts", 1, "CIV.INI") != 0;
+    /* ... and drawn again by the host over the scaled desktop, at the
+       screen's own pixels (sharptext.c), unless SharpText=0 */
+    plat_sharp_text = plat_system_fonts && GetPrivateProfileIntA("OpenCiv2", "SharpText", 1, "CIV.INI") != 0;
     gdi_init();
     wnd_init();
     resources_init();
@@ -231,6 +253,8 @@ int main(int argc, char **argv)
         if (scale && atoi(scale) > 1)
             plat_scale = atoi(scale);
     }
+    if (window_open)
+        host_set_smooth(!classic && GetPrivateProfileIntA("OpenCiv2", "SmoothScale", 1, "CIV.INI") != 0);
     replay_init();
     extras_load();
     pointer_init(screen_w / 2, screen_h / 2);      /* where the X server puts it */

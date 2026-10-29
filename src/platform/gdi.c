@@ -45,6 +45,7 @@ void bmp_destroy(Bitmap *b)
 {
     if (!b)
         return;
+    notes_free(b);
     if (b->owns_bits)
         free(b->bits);
     free(b);
@@ -289,6 +290,8 @@ void plat_compose(void)
     Window *order[512], *w;
     int n = 0, i, y;
     memcpy(screen->bits, root->bits, (size_t)screen->stride * (size_t)screen->h);
+    notes_compose_begin();
+    notes_compose_surface(root, 0, 0);
     for (w = desktop->children; w && n < 512; w = w->next)
         order[n++] = w;
     for (i = n - 1; i >= 0; i--) {
@@ -314,7 +317,9 @@ void plat_compose(void)
             if (x1 > x0)
                 memcpy((DWORD *)bmp_row(screen, y) + x0, (DWORD *)bmp_row(s, sy) + (x0 - dx), (size_t)(x1 - x0) * 4);
         }
+        notes_compose_surface(s, dx, dy);
     }
+    notes_compose_end();
     if (plat_color_lut_on) {
         /* X35 (docs/EXTRAS.md): the colour correction, on what is shown */
         for (y = 0; y < screen->h; y++) {
@@ -327,6 +332,7 @@ void plat_compose(void)
             }
         }
     }
+    notes_compose_lut();
 }
 
 /* A DC on the composed screen itself (interactive popup menus). */
@@ -1174,8 +1180,122 @@ static void xfer_row(Xfer *x, int sy, int dy, int dx0, int n, const int *sxs, DW
     }
 }
 
+/* Sharp text (sharptext.c): the source's notes, taken before a plain copy
+   (the source may be the destination). */
+static TextNote *notes_take(Bitmap *src, int *count)
+{
+    TextNote *v;
+    int i, n = 0;
+    *count = 0;
+    if (!src->notes || !src->notes->n)
+        return NULL;
+    v = malloc((size_t)src->notes->n * sizeof *v);
+    if (!v)
+        return NULL;
+    for (i = 0; i < src->notes->n; i++) {
+        const TextNote *o = &src->notes->v[i];
+        size_t bytes = (size_t)(o->r.right - o->r.left) * (size_t)(o->r.bottom - o->r.top) * (size_t)(src->bpp / 8);
+        if (!note_valid(src, o) || !(v[n].bg = malloc(bytes)))
+            continue;
+        memcpy(v[n].bg, o->bg, bytes);
+        v[n].r = o->r;
+        v[n].clip = o->clip;
+        v[n].kind = o->kind;
+        v[n].font = o->font;
+        v[n].ch = o->ch;
+        v[n].adv = o->adv;
+        v[n].color = o->color;
+        v[n].x = o->x;
+        v[n].y = o->y;
+        n++;
+    }
+    *count = n;
+    return v;
+}
+
+/* ... and after it, those wholly copied, moved to the destination (their
+   pixels converted as the blit's were); the destination's notes it
+   copied over dropped. */
+static void notes_put(Xfer *xf, TextNote *v, int count, const Region *clip, int x, int y, int w, int h, int sx, int sy)
+{
+    Bitmap *src = xf->src, *dst = xf->dst;
+    RECT want, all = {0, 0, 0, 0};
+    int i, k, *sxs = NULL;
+    want.left = x; want.top = y; want.right = x + w; want.bottom = y + h;
+    all.right = dst->w;
+    all.bottom = dst->h;
+    if (dst->notes)
+        for (i = dst->notes->n - 1; i >= 0; i--) {
+            const RECT *r = &dst->notes->v[i].r;
+            for (k = 0; k < clip->n; k++) {
+                RECT a;
+                if (rect_intersect(&a, &clip->r[k], &want) && rect_intersect(&a, &a, r) && !memcmp(&a, r, sizeof a))
+                    break;
+            }
+            if (k < clip->n)
+                notes_remove(dst, i);
+        }
+    for (i = 0; i < count; i++) {
+        TextNote *o = &v[i], *n;
+        RECT r = o->r, cl = o->clip, a;
+        int nw = (int)(r.right - r.left), nh = (int)(r.bottom - r.top), row, col;
+        Bitmap *ts, *td;
+        r.left += x - sx; r.right += x - sx; r.top += y - sy; r.bottom += y - sy;
+        cl.left += x - sx; cl.right += x - sx; cl.top += y - sy; cl.bottom += y - sy;
+        for (k = 0; k < clip->n; k++)
+            if (rect_intersect(&a, &clip->r[k], &want) && rect_intersect(&a, &a, &all)) {
+                RECT b2;
+                if (rect_intersect(&b2, &a, &r) && !memcmp(&b2, &r, sizeof r))
+                    break;
+            }
+        if (k == clip->n || !rect_intersect(&cl, &cl, &a))
+            continue;
+        if (!(n = notes_add(dst)))
+            break;
+        *n = *o;
+        n->r = r;
+        n->clip = cl;
+        n->x += x - sx;
+        n->y += y - sy;
+        n->bg = malloc((size_t)nw * (size_t)nh * (size_t)(dst->bpp / 8));
+        ts = bmp_create(nw, nh, src->bpp, 0);
+        td = bmp_create(nw, nh, dst->bpp, 0);
+        if (!sxs)
+            sxs = malloc(sizeof(int) * (size_t)(w > nw ? w : nw));
+        if (!n->bg || !ts || !td || !sxs) {
+            free(n->bg);
+            dst->notes->n--;
+            bmp_destroy(ts);
+            bmp_destroy(td);
+            continue;
+        }
+        memcpy(ts->colors, src->colors, sizeof ts->colors);
+        ts->ncolors = src->ncolors;
+        memcpy(td->colors, dst->colors, sizeof td->colors);
+        td->ncolors = dst->ncolors;
+        for (row = 0; row < nh; row++)
+            memcpy(bmp_row(ts, row), o->bg + (size_t)row * nw * (src->bpp / 8), (size_t)nw * (src->bpp / 8));
+        for (col = 0; col < nw; col++)
+            sxs[col] = col;
+        xf->src = ts;
+        xf->dst = td;
+        for (row = 0; row < nh; row++) {
+            xfer_row(xf, row, row, 0, nw, sxs, SRCCOPY);
+            memcpy(n->bg + (size_t)row * nw * (dst->bpp / 8), bmp_row(td, row), (size_t)nw * (dst->bpp / 8));
+        }
+        xf->src = src;
+        xf->dst = dst;
+        bmp_destroy(ts);
+        bmp_destroy(td);
+        n->hash = note_hash(dst, &n->r);
+    }
+    free(sxs);
+}
+
 static WINBOOL blit(HDC hd, int x, int y, int w, int h, HDC hs, int sx, int sy, int sw, int sh, DWORD rop)
 {
+    TextNote *taken = NULL;
+    int ntaken = 0, noting;
     DC *dd = get_dc(hd), *sd = get_dc(hs);
     Region clip = {0, 0, NULL};
     Bitmap *dst, *src;
@@ -1223,6 +1343,9 @@ static WINBOOL blit(HDC hd, int x, int y, int w, int h, HDC hs, int sx, int sy, 
             plat_log("trace: blit to %d,%d %dx%d from %s %d,%d rop %06x\n", (int)sr.left, (int)sr.top, w, h,
                      sd->is_memory ? "memory" : "window", sx, sy, (unsigned)rop);
     }
+    noting = rop == SRCCOPY && !flipx && !flipy && sw == w && sh == h && sharp_surface(dst) && sharp_surface(src);
+    if (noting)
+        taken = notes_take(src, &ntaken);
     sxs = malloc(sizeof(int) * (size_t)w);
     for (i = 0; i < clip.n; i++) {
         RECT a, want;
@@ -1255,6 +1378,12 @@ static WINBOOL blit(HDC hd, int x, int y, int w, int h, HDC hs, int sx, int sy, 
         }
     }
     free(sxs);
+    if (noting && (ntaken || dst->notes)) {
+        notes_put(&xf, taken, ntaken, &clip, x, y, w, h, sx, sy);
+        for (i = 0; i < ntaken; i++)
+            free(taken[i].bg);
+    }
+    free(taken);
     rgn_free(&clip);
     return TRUE;
 }

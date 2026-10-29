@@ -55,15 +55,45 @@ key `=0`.
 | `PathLines` | Hold Shift with the pointer over the map to see the path the active unit would take there, based on the map as you know it (units and cities you can't see aren't counted). With a city selected (View Pieces, the cursor on it), hold Shift over the same city to see lines to the cities it has trade routes with, or over another city to see the way a road or railroad must take to give their trade routes the road bonus (the game looks for it along this way only, up to the other city or one of your cities on the way): yellow if the road is already there and gives the bonus, white if not. |
 | `SentryHalftone` | Units on sentry, and aircraft at a base, are drawn in grey shades so you can still tell what they are, instead of as a flat grey shape. |
 | `DefaultZoom1` | A new game (or a save without a saved window layout) starts with the map at normal 1:1 zoom, whatever the screen size. |
+| `IntegerZoom` | The map zooms only in whole steps, at which every pixel of the tiles is drawn the same size: ¼, ½, 1:1 and 2× (tiles 16, 32, 64 and 128 pixels wide). Zoom In and Zoom Out (Z, X, Ctrl+wheel) go to the next of these; the View menu's zooms and a saved game's go to the nearest (Medium Zoom Out: ½, Max Zoom Out: ¼). The original's other twelve zooms draw some rows and columns of each tile twice, or leave them out, and not the rest. OpenCiv2's own addition, not CIV2UIA's. |
 
 ## Screen scale
 
-On a large screen the game is drawn larger, in whole steps, so it stays sharp: each of the
-game's pixels becomes 2×2 or 3×3 of the screen's. By default the step is the largest that
-still leaves the game at least 1024×768 (a 4K screen: 2, the game at 1920×1080). Change it in
-Game > OpenCiv2 Options (Display and messages), Screen scale, or with `Scale=` in `CIV.INI`
-(0 means by the screen's size); it takes effect the next time the game starts. The game is never
-made smaller than 640×480.
+Where the system scales things up, the game is drawn larger, in whole steps: each of the
+game's pixels becomes 2×2 or 3×3 of the screen's. By default the step is the system's own
+scale, rounded down: on Windows its display scaling (100% to 175%: 1, the screen's own pixels;
+200%: 2; 300%: 3), on a Mac the Retina screen's pixels per point (2). Elsewhere (Linux, and
+with `CIV2_CLASSIC=1`) it is the largest step that still leaves the game at least 1024×768 (a
+4K screen: 2, the game at 1920×1080). Change it in Game > OpenCiv2 Options (Display and
+messages), Screen scale, or with `Scale=` in `CIV.INI` (0 means the default); it takes effect
+the next time the game starts. The game is never made smaller than 640×480.
+
+At a step of 2 or 3 (4, 6: 2 or 3, then doubled) the game's pixels are smoothed with Scale2x or
+Scale3x, which round off the steps along the edges of one colour against another (text,
+outlines) and leave the rest as blocks. `SmoothScale=0` (or Smooth that scale: 0 in the same
+dialog, at once) shows them as plain blocks. The game draws its text at its own size, as
+pixels like the rest, so drawn larger it cannot be as sharp as the screen's own text.
+
+## Fonts
+
+On Windows the game's text is drawn in the fonts it asks for, as Windows draws them, as the
+original's was: Times New Roman, Arial, Courier and System, each letter drawn by Windows (GDI)
+and then placed by the game as before. On the game's own 256-colour surfaces the letters are
+not antialiased, as on Windows; elsewhere they are, in Windows' grey levels. `SystemFonts=0`
+(or System's fonts: 0 in Game > OpenCiv2 Options, Display and messages; from the next start)
+uses the glyphs recorded from the original under Wine instead, which has none of these fonts
+and draws DejaVu Serif, DejaVu Sans and DejaVu Sans Mono in their place. Those are also what
+the other systems, the replays and the unit tests use, since the replays compare the game's
+screens with the original's under Wine (`CIV2_TEST_SYSFONTS=1` turns the system's fonts on in
+a replay, for tests of them).
+
+With the system's fonts, where the desktop is drawn larger (`Scale` 2 or more), the text is
+also drawn sharp: each letter the game draws is noted, with where it was drawn and in which
+font, followed as the game copies its pictures from surface to surface and onto the screen,
+and drawn again by Windows over the enlarged screen, at the screen's own pixels and
+antialiased, in place of the enlarged letter. Text that is not the game's letters (the
+numbers and words in its pictures, such as the city sizes' digits) stays as drawn.
+`SharpText=0` (Text drawn sharp: 0, from the next start) draws the letters enlarged as the rest.
 
 ## Rule changes
 

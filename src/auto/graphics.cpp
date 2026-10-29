@@ -9979,6 +9979,12 @@ gfx_copy_pixels(int src_bits,int dst_bits,int src_x,int src_y,int dst_x,int dst_
     dst = (i32 *)((int)dst + (dst_pitch - width));
     rows_left--;
   } while (rows_left != 0);
+  if (plat_sharp_text) {
+    /* (port) the copied text's notes, for drawing it sharp */
+    plat_notes_copy((const void *)(iptr)src_bits,(const void *)(iptr)dst_bits,src_x,
+                    src_pitch < 1 ? (src_height - 1) - src_y : src_y,dst_x,
+                    dst_pitch < 1 ? (dst_height - 1) - dst_y : dst_y,(int)width,height);
+  }
   return;
 }
 

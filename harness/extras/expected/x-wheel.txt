@@ -1,4 +1,4 @@
-# harness/extras_suite.py --bless: CIV2_TEST_EXTRAS=1 CIV2_TEST_FULL=640x480
+# harness/extras_suite.py --bless: CIV2_TEST_EXTRAS=-60 CIV2_TEST_FULL=640x480
 x01-a-start 640x480 c096527a0ce3a6e50e107626b659d3082ea1f93efba0e269aecacc0f41992cad
 x01-b-zoomed 640x480 ba7384d0fb9796b34054065eeed50eaf1fe2f606480449cf6db71a3b28bd8a1c
 x01-c-centred 640x480 0f2f937d4e0d88313babaa3efd7092e36b1cb81a8f9c23d63126ae23a7c03eac

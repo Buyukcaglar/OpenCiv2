@@ -1366,6 +1366,10 @@ void MapView::update_layout()
   
   layout_width_u = client_width;
   layout_height_u = client_height;
+  if (extra_ui(X_INTEGER_ZOOM)) {
+    /* X60: whole steps only (the tile width: still the last zoom's) */
+    *(i16 *)&zoom_u = (i16)extras_integer_zoom((int)(short)zoom_u,(int)tile_width_u);
+  }
   scaled = zoom_scale(0x40);
   tile_width_u = scaled;
   scaled = zoom_scale(0x20);

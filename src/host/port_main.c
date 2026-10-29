@@ -87,6 +87,29 @@ void HOST(menu_add)(Host *h, u32 level, u32 flags, u32 id, u32 text)
 }
 void HOST(menu_end)(Host *h) { (void)h; host_menu_end(); }
 void HOST(present)(Host *h, u32 pixels, u32 stride) { (void)h; host_present(MEM(pixels), (int)stride); }
+void HOST(set_smooth)(Host *h, u32 on) { (void)h; host_set_smooth((int)on); }
+u32 HOST(font_open)(Host *h, u32 face, u32 height, u32 weight, u32 italic, u32 pitch_family, u32 tm)
+{
+    (void)h;
+    return (u32)host_font_open(MEM(face), (int)height, (int)weight, (int)italic, (int)pitch_family,
+                               (int32_t *)MEM(tm));
+}
+u32 HOST(text_scale)(Host *h) { (void)h; return (u32)host_text_scale(); }
+void HOST(text_font)(Host *h, u32 id, u32 face, u32 height, u32 weight, u32 italic, u32 pitch_family)
+{
+    (void)h;
+    host_text_font((int)id, MEM(face), (int)height, (int)weight, (int)italic, (int)pitch_family);
+}
+void HOST(present_text)(Host *h, u32 pixels, u32 stride, u32 texts, u32 n)
+{
+    (void)h;
+    host_present_text(MEM(pixels), (int)stride, (const HostText *)MEM(texts), (int)n);     /* int32s, same layout */
+}
+u32 HOST(font_glyph)(Host *h, u32 font, u32 ch, u32 aa, u32 m, u32 bits, u32 size)
+{
+    (void)h;
+    return (u32)host_font_glyph((int)font, (int)ch, (int)aa, (int32_t *)MEM(m), (uint8_t *)MEM(bits), (int)size);
+}
 void HOST(minimize)(Host *h) { (void)h; host_minimize(); }
 
 static u32 event_out(int got, const HostEvent *e, u32 out)

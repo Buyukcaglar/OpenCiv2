@@ -42,13 +42,15 @@ int HOST_API(host_base_path)(char *buf, int size);
  * a frame over the display's usable area (the desktop drawn to fill it). */
 int HOST_API(host_open_window)(int w, int h, int scale);
 /* Whole pixels per desktop pixel for a w x h pixel display (the platform
- * layer's too, src/platform/main.c): scale, or (0) as many as leave a
- * 1024x768 desktop; never a desktop smaller than 640x480. */
-static inline int host_desktop_scale(int w, int h, int scale)
+ * layer's too, src/platform/main.c): scale, or (0) the system's own scale
+ * in whole steps (system: Windows' DPI setting, macOS' pixels per point;
+ * 0 where unknown: as many as leave a 1024x768 desktop); never a desktop
+ * smaller than 640x480. */
+static inline int host_desktop_scale(int w, int h, int scale, int system)
 {
     int most = w / 640 < h / 480 ? w / 640 : h / 480;
     if (scale < 1)
-        scale = w / 1024 < h / 768 ? w / 1024 : h / 768;
+        scale = system > 0 ? system : w / 1024 < h / 768 ? w / 1024 : h / 768;
     if (scale > most)
         scale = most;
     return scale < 1 ? 1 : scale;
@@ -61,7 +63,7 @@ int HOST_API(host_usable_size)(int32_t *w, int32_t *h);
  * mode 0 as is usual there (Windows: maximized; macOS: the screen below
  * the menu bar), 1 full screen, 2 a window.  The desktop is its size in
  * pixels over scale (*w x *h), scale whole pixels per desktop pixel (0: by
- * the display's size: host_desktop_scale); its menu bar is the system's
+ * the system's scale: host_desktop_scale); its menu bar is the system's
  * (host_menu_*).  Returns the scale, 0: none (then host_open_window). */
 int HOST_API(host_open_native_window)(int32_t *w, int32_t *h, int mode, int scale);
 
@@ -74,6 +76,41 @@ void HOST_API(host_menu_begin)(void);
 void HOST_API(host_menu_add)(int level, int flags, int id, const char *text);
 void HOST_API(host_menu_end)(void);
 void HOST_API(host_present)(const void *pixels, int stride);
+/* 1: where the desktop is shown 2 or more pixels per desktop pixel, its
+ * pixels drawn through a pixel-art scaler (Scale2x, Scale3x) instead of as
+ * blocks; 0: as blocks.  From the next present. */
+void HOST_API(host_set_smooth)(int on);
+
+/* The system's own fonts, where the host has them (Windows: GDI's), for
+ * text drawn as the original's was there.  A font as a LOGFONT asks for it
+ * (height: lfHeight, weight, italic, pitch and family, face name): its text
+ * metrics in tm (11 values: height, ascent, descent, internal and external
+ * leading, average and maximum width, weight, overhang, the first, last,
+ * default and break characters a byte each, pitch and family | charset
+ * << 8).  Returns its number, 0 if there is none. */
+int HOST_API(host_font_open)(const char *face, int height, int weight, int italic, int pitch_family, int32_t *tm);
+/* Character ch (code page 1252) of a font: m = its advance, x and y of its
+ * pixels from the pen at the cell's top left, w, h; bits, if they fit in
+ * size bytes: aa 0, rows of (w + 7) / 8 bytes, the leftmost pixel the top
+ * bit; aa 1, w * h coverages 0..16.  Returns the bytes needed, -1 if none. */
+int HOST_API(host_font_glyph)(int font, int ch, int aa, int32_t *m, uint8_t *bits, int size);
+
+/* Sharp text (src/platform/sharptext.c): text the host draws over the
+ * desktop after scaling it, at the screen's own pixels, antialiased.
+ * host_text_scale: the screen's pixels per desktop pixel it draws text at
+ * (Windows; 0 where it cannot).  host_text_font: font number id as a
+ * LOGFONT asks for it (as host_font_open), at the desktop's size.
+ * host_present_text: as host_present, then each of the n texts over it:
+ * kind 0, character ch (code page 1252) of font, its pen at x (the cell's
+ * left) and y (the baseline), its cell adv wide (the letter centred in it),
+ * drawn within left, top, right, bottom; kind 1, a bar filling left, top,
+ * right, bottom; colour 0x00RRGGBB; all in desktop pixels. */
+typedef struct HostText {
+    int32_t kind, font, ch, color, x, y, left, top, right, bottom, adv;
+} HostText;
+int HOST_API(host_text_scale)(void);
+void HOST_API(host_text_font)(int id, const char *face, int height, int weight, int italic, int pitch_family);
+void HOST_API(host_present_text)(const void *pixels, int stride, const HostText *texts, int n);
 /* Minimize the window (the desktop's main window was minimized). */
 void HOST_API(host_minimize)(void);
 

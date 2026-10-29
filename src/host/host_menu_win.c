@@ -15,6 +15,15 @@ static HWND hwnd_of(SDL_Window *window)
     return SDL_GetWindowWMInfo(window, &info) ? info.info.win.window : NULL;
 }
 
+int host_win_dpi(SDL_Window *window)
+{
+    typedef UINT(WINAPI *GetDpiForWindowFn)(HWND);
+    GetDpiForWindowFn dpi_for_window =
+        (GetDpiForWindowFn)(void *)GetProcAddress(GetModuleHandleW(L"user32.dll"), "GetDpiForWindow");
+    HWND hwnd = hwnd_of(window);
+    return dpi_for_window && hwnd ? (int)dpi_for_window(hwnd) : 0;
+}
+
 void host_menu_apply(SDL_Window *window, const HostMenuItem *items, int n)
 {
     HWND hwnd = hwnd_of(window);
